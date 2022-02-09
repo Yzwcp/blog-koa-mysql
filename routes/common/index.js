@@ -1,6 +1,8 @@
 const Router = require('koa-router')
 const commonRouter = new Router()
 const DB = require("../../config.js")
+const {util,client} = require('../../util')
+
 const jwt = require('koa-jwt')({secret:'umep_app_secret'});
 let routesModel = {
   commonQuery:(value,dbName,where="",orderBy,limit) => {
@@ -37,7 +39,7 @@ commonRouter.post('/saveCommonLike', async (ctx) => {
 /**
  * 通用查询接口
  */
-commonRouter.get('/query', async (ctx) => {
+commonRouter.get('/query',util.auth, async (ctx) => {
   const {query} = ctx.request
   const {dbName,where="",orderBy="Id",limit="0,10"} = query
   let wo = ''
@@ -48,5 +50,17 @@ commonRouter.get('/query', async (ctx) => {
   ctx.body = result
 });
 
-
+commonRouter.get('/imageList',async (ctx)=>{
+  try {
+    let result = await client.list({
+      'max-keys': 5
+    })
+    console.log(result)
+    ctx.body={
+      result
+    }
+  } catch (err) {
+    console.log (err)
+  }
+})
 module.exports = commonRouter.routes()
