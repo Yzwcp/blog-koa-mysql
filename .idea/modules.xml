@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/blogApp.iml" filepath="$PROJECT_DIR$/.idea/blogApp.iml" />
       <module fileurl="file://D:/xz/xz/juejin-solo/blogvue3/my-vue-app/.idea/my-vue-app.iml" filepath="D:/xz/xz/juejin-solo/blogvue3/my-vue-app/.idea/my-vue-app.iml" />
+      <module fileurl="file://D:/xz/xz/xznwww/.idea/xznwww.iml" filepath="D:/xz/xz/xznwww/.idea/xznwww.iml" />
+      <module fileurl="file://D:/xz/xz/xzowww/.idea/xzowww.iml" filepath="D:/xz/xz/xzowww/.idea/xzowww.iml" />
     </modules>
   </component>
 </project>
