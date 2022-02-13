@@ -3,8 +3,8 @@ const mysql = require('mysql');
 const {util} = require('./util.js')
 // 建立链接
 let pool = mysql.createPool({
-    host: '127.0.0.1',
-    user: 'root',
+    host: '139.196.155.67',
+    user: 'blog',
     password: 'root',
     database: 'blog'
 })

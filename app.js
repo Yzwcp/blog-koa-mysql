@@ -5,7 +5,6 @@ const koaJwt = require('koa-jwt');
 const jwt = require('jsonwebtoken')
 const app =new Koa()
 const logger = require('koa-logger')
-
 app.use(koaJwt({ secret: 'umep_app_secret' }).unless({
   // 登录接口不需要验证
   path: [/^\/query/,/^\/register/,/^\/login/,/^\/imageList/,/^\/upload/]

@@ -1,23 +1,7 @@
 const Router = require('koa-router')
 const tagsRouter = new Router()
-const DB = require("../../config.js")
-let routesModel = {
-  insertTags:(value)=>{
-    let _sql = `insert into atc_tags (label,value) select ?,? from dual where not exists(select * from atc_tags where value =?)`
-    return DB.query( _sql, value)
-  },
-  modifyTags:(value,params)=>{
-    let _sql = `update atc_tags set label=?,value=? where id=${params}`
-    return DB.query( _sql, value)
-  },
-  remove:(value,id)=>{
-    let _sql = `DELETE FROM article where id='${id}'`;
-    return DB.query( _sql, value)
-  },
-  conditionQuery: (value,params) => {
-  
-  }
-}
+const {tagsMoudles} = require('./static')
+
 tagsRouter.get('/tags', async (ctx) => {
   const sql = 'select * from atc_tags';
   const result = await DB.query(sql);
@@ -31,8 +15,8 @@ tagsRouter.get('/saveTags', async (ctx) => {
   const {query} = ctx.request
   const {value=''} = query
   const label = value
-  routesModel.conditionQuery([],value)
-  let result = await routesModel.insertTags([label,value])
+  // tagsMoudles.conditionQuery([],value)
+  let result = await tagsMoudles.insert([label,value])
   ctx.body = result;
 });
 /**
@@ -43,7 +27,7 @@ tagsRouter.get('/editTags', async (ctx) => {
   const {value='',id} = query
   if(!value || !id )return ctx.body = {success:false,message:'抱歉没有id或者分类名称'}
   const label = value
-  let result = await routesModel.modifyTags([label,value],id)
+  let result = await tagsMoudles.modify([label,value],id)
   ctx.body = result;
 });
 /**
@@ -52,7 +36,7 @@ tagsRouter.get('/editTags', async (ctx) => {
 tagsRouter.delete('/removeTags', async (ctx) => {
   const {query} = ctx.request
   const {id} = query
-  let result = await routesModel.remove([],id)
+  let result = await tagsMoudles.remove([],id)
   ctx.body = result;
 });
 module.exports = tagsRouter.routes()
