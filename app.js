@@ -7,7 +7,7 @@ const app =new Koa()
 const logger = require('koa-logger')
 app.use(koaJwt({ secret: 'umep_app_secret' }).unless({
   // 登录接口不需要验证
-  path: [/^\/query/,/^\/register/,/^\/login/,/^\/imageList/,/^\/upload/]
+  path: [/^\/query/,/^\/register/,/^\/ta/,/^\/imageList/,/^\/upload/,/^\/thirdparty/]
 }));
 app.use(async (ctx, next) => {
   return next().catch((err) => {

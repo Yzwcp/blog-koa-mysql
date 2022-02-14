@@ -7,6 +7,7 @@ const classifyRouter = require('./classify/index')
 const tagsRouter = require('./tags/index')
 const commonRouter = require('./common/index')
 const userRouter = require('./user/index')
+const thirdPartyRouter = require('./thirdpartyPost/index.js')
 
 router.use(articleRouter)
 .use(classifyRouter)
@@ -14,4 +15,5 @@ router.use(articleRouter)
 .use(commonRouter)
 .use(commentRouter)
 .use(userRouter)
+.use(thirdPartyRouter)
 module.exports = router
