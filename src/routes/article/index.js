@@ -1,8 +1,8 @@
 const Router = require('koa-router')
 const articleRouter = new Router()
-const DB = require("../../config.js")
-const {util} = require('../../util')
-const {articleMoudles} = require('./static')
+const DB = require("../../connect/mysql.js")
+const {auth} = require('../../util/util.js')
+const {articleMoudles} = require('./static.js')
 
 articleRouter.get('/article', async (ctx) => {
   const sql = 'select * from article';
@@ -12,7 +12,7 @@ articleRouter.get('/article', async (ctx) => {
 /***
  * 添加文章
  */
-articleRouter.post('/saveArticle',util.auth, async (ctx) => {
+articleRouter.post('/saveArticle',auth, async (ctx) => {
   const {auth, body,categorize,title,tags,myDescribe,likeList,cover} = ctx.request.body
   const createTime = new Date()
   const updateTime = createTime

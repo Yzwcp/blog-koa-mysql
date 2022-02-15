@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 const thirdparty = new Router()
-const {util} = require('../../util')
+const {util} = require('../../util/util.js')
 const koa2Req = require('koa2-request')
 const fiexdParams = {
   platform : 2,

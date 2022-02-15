@@ -5,23 +5,24 @@ const koaJwt = require('koa-jwt');
 const jwt = require('jsonwebtoken')
 const app =new Koa()
 const logger = require('koa-logger')
-app.use(koaJwt({ secret: 'umep_app_secret' }).unless({
-  // 登录接口不需要验证
-  path: [/^\/query/,/^\/register/,/^\/ta/,/^\/imageList/,/^\/upload/,/^\/thirdparty/]
-}));
-app.use(async (ctx, next) => {
-  return next().catch((err) => {
-    if (err.status === 401) {
-      ctx.status = 401;
-      ctx.body = {
-        code: 401,
-        message:err.message
-      }
-    } else {
-      throw err;
-    }
-  })
-});
+
+// app.use(koaJwt({ secret: 'umep_app_secret' }).unless({
+//   // 登录接口不需要验证
+//   path: [/^\/query/,/^\/register/,/^\/login/,/^\/imageList/,/^\/upload/,/^\/thirdparty/,'save']
+// }));
+// app.use(async (ctx, next) => {
+//   return next().catch((err) => {
+//     if (err.status === 401) {
+//       ctx.status = 401;
+//       ctx.body = {
+//         code: 401,
+//         message:err.message
+//       }
+//     } else {
+//       throw err;
+//     }
+//   })
+// });
 
 // logger
 app.use(async (ctx, next) => {
@@ -31,7 +32,7 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-const router =  require('./routes/index')
+const router =  require('./src/index.js')
 const cors = require('@koa/cors')
 const bodyParser = require('koa-bodyparser')
 app.use(cors())

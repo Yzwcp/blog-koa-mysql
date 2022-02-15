@@ -1,10 +1,10 @@
 const Router = require('koa-router')
 const userRouter = new Router()
 const crypto = require('crypto')
-const DB = require("../../config.js")
-const {util} = require('../../util')
+const DB = require("../../connect/mysql.js")
+const {util} = require('../../util/util.js')
 const jwt = require('jsonwebtoken')
-const {userMoudles} = require('./static')
+const {userMoudles} = require('./static.js')
 /***
  * 注册用户
  */

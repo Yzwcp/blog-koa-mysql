@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const classifyRouter = new Router()
-const DB = require("../../config.js")
-const {classifyMoudles} = require('./static')
+const DB = require("../../connect/mysql.js")
+const {classifyMoudles} = require('./static.js')
 classifyRouter.get('/classify', async (ctx) => {
   const sql = 'select * from atc_classify';
   const result = await DB.query(sql);

@@ -1,4 +1,4 @@
-const DB = require("../../config.js")
+const DB = require("../../connect/mysql.js")
 class commentMoudles {
   static insert(value){
     let _sql = "insert into atc_comment set articleId=?,heroInfo=?,likeList=?,myName=?,parentId=?,type=?,createTime=?,userId=?,value=?"

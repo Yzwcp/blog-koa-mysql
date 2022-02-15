@@ -1,4 +1,4 @@
-const DB = require("../../config.js")
+const DB = require("../../connect/mysql.js")
 class classifyMoudles {
   insert(value){
     let _sql = "insert into atc_classify set label=?,value=?"

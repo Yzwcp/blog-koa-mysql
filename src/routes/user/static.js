@@ -1,4 +1,4 @@
-const DB = require("../../config.js")
+const DB = require("../../connect/mysql.js")
 class userMoudles {
   static insert(value,username){
     let _sql = `insert into user (username,password) select ?,? from dual where not exists(select * from user where username = `+"'"+username+"'"+')'

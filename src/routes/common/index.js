@@ -1,13 +1,13 @@
 const Router = require('koa-router')
 const commonRouter = new Router()
-const DB = require("../../config.js")
-const {util,client,formatResult} = require('../../util')
+const DB = require("../../connect/mysql.js")
+const {auth,client,formatResult} = require('../../util/util.js')
 const jwt = require('koa-jwt')({secret:'umep_app_secret'});
 const multer  = require("@koa/multer");
 const co = require("co");
 const fs = require("fs");
 const path =require('path')
-const {commonMoudles} = require('./static')
+const {commonMoudles} = require('./static.js')
 /***
  * 评论喜欢
  */
@@ -21,7 +21,7 @@ commonRouter.post('/saveCommonLike', async (ctx) => {
 /**
  * 通用查询接口
  */
-commonRouter.get('/query',util.auth, async (ctx) => {
+commonRouter.get('/query',auth, async (ctx) => {
   const {query} = ctx.request
   const {dbName,where="",orderBy="Id",limit="0,10"} = query
   let wo = ''
@@ -41,7 +41,7 @@ commonRouter.get('/imageList',async (ctx)=>{
       'prefix':'blog/'+path,
     })
     ctx.body={
-      ...util.formatResult(result.objects,true)
+      ...formatResult(result.objects,true)
     }
   } catch (err) {
     console.log (err)
@@ -81,7 +81,7 @@ commonRouter.post("/upload",async (ctx, next) => {
     //文件过大捕获
     console.log('eeee',e)
     ctx.status = 500;
-    return  ctx.body=util.formatResult(JSON.parse(JSON.stringify(e)),false,JSON.parse(JSON.stringify(e)).message)
+    return  ctx.body=formatResult(JSON.parse(JSON.stringify(e)),false,JSON.parse(JSON.stringify(e)).message)
   }
   let key  =  ctx.req.name
   //图片路径
@@ -94,11 +94,11 @@ commonRouter.post("/upload",async (ctx, next) => {
       //上传到阿里云oss
       const result = yield client.put('blog/article_cover/'+key, localFile);
       if(result.res.status==200){
-        return  ctx.body = util.formatResult({name:key,url:result.url+imgWidth},true)
+        return  ctx.body = formatResult({name:key,url:result.url+imgWidth},true)
       }
       throw ({result})
     }catch (e) {
-      ctx.body = util.formatResult(e.result,false)
+      ctx.body = formatResult(e.result,false)
     }
     //删除临时图片
     fs.unlinkSync(localFile);

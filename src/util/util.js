@@ -6,8 +6,16 @@ const client = new OSS({
   accessKeySecret: 'Sdd1UvlKU7O1fURsvFVhKgIy837J5r',
   bucket: 'blog-umep',
 });
-module.exports.client =client
-module.exports.util = {
+const Tips = {
+  QUERY_ERROR:"查询失败！请检查网络",
+  LACK_PARAMS:'缺少入参',
+  HANDLE_SUCCESS :"操作成功",
+  HANDLE_ERR :"操作失败",
+
+}
+module.exports = {
+  Tips,
+  client,
   /**
    * 格式化输出数据
    * @param data

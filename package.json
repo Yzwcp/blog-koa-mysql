@@ -16,7 +16,9 @@
     "koa-router": "^10.1.1",
     "koa2-request": "^1.0.4",
     "multer": "^1.4.4",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.16.1"
   },
   "devDependencies": {
     "co": "^4.6.0"

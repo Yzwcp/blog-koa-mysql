@@ -1,4 +1,4 @@
-const DB = require("../../config.js")
+const DB = require("../../connect/mysql.js")
 class commonMoudles {
   static commonQuery(value,dbName,where="",orderBy,limit){
     const sql = `select * from ${dbName} ${where} order by ${orderBy} limit ${limit}`;

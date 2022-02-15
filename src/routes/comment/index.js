@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const commentRouter = new Router()
-const DB = require("../../config.js")
-const {commonMoudles} = require('./static')
+const DB = require("../../connect/mysql.js")
+const {commonMoudles} = require('./static.js')
 /***
  * 添加评论
  */
