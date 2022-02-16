@@ -1,21 +1,22 @@
 const Router = require('koa-router')
-const tagsRouter = new Router()
+const categorize = new Router()
 const {Categorize} = require('./static.js')
 const {formatResult,Tips} = require('../../util/util.js')
-tagsRouter.prefix('/categorize')
+categorize.prefix('/categorize')
 
-tagsRouter.get('/query', async (ctx) => {
+categorize.get('/query', async (ctx) => {
   try {
-    const result = await Categorize.findAll()
+    const result = await Categorize.findAndCountAll()
     ctx.body = formatResult(result,true)
   }catch (e) {
-    ctx.body = formatResult({},false,Tips.QUERY_ERROR)
+    console.log(e);
+    ctx.body = formatResult(e,false,Tips.QUERY_ERROR)
   }
 });
 /***
  * 添加分类
  */
-tagsRouter.post('/save', async (ctx) => {
+categorize.post('/save', async (ctx) => {
   const {value} =ctx.request.body
   const label = value
   const [result, created] = await Categorize.findOrCreate({
@@ -31,7 +32,7 @@ tagsRouter.post('/save', async (ctx) => {
 /**
  * 编辑分分类
  */
-tagsRouter.post('/modify', async (ctx) => {
+categorize.post('/modify', async (ctx) => {
   try {
     const {value='',id} = ctx.request.body
     if(!value || !id )return ctx.body = formatResult({},false,Tips.LACK_PARAMS)
@@ -47,7 +48,7 @@ tagsRouter.post('/modify', async (ctx) => {
  * 删除分类
  * @param {Number} 分类
  */
-tagsRouter.post('/remove', async (ctx) => {
+categorize.post('/remove', async (ctx) => {
   try {
     const {id} = ctx.request.body
     if( !id )return ctx.body = formatResult({},false,Tips.LACK_PARAMS)
@@ -58,4 +59,4 @@ tagsRouter.post('/remove', async (ctx) => {
     ctx.body = formatResult({},false,e);
   }
 });
-module.exports = tagsRouter.routes()
+module.exports = categorize.routes()

@@ -6,7 +6,7 @@ tagsRouter.prefix('/tags')
 
 tagsRouter.get('/query', async (ctx) => {
   try {
-    const result = await Tags.findAll()
+    const result = await Tags.findAndCountAll()
     ctx.body = formatResult(result,true)
   }catch (e) {
     ctx.body = formatResult({},false,Tips.QUERY_ERROR)

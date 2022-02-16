@@ -20,7 +20,7 @@ articleRouter.prefix('/article')
  */
 articleRouter.get('/query', async (ctx) => {
   try {
-    const {title,categorize,tags,pageSize=10,pageNum=1} = ctx.request.query
+    const {title,categorize,tags,pageSize=10,current=1} = ctx.request.query
     let conditions = {
       categorize:categorize,
       title:{[Op.substring]: title},// 模糊查询
@@ -32,8 +32,8 @@ articleRouter.get('/query', async (ctx) => {
     !tags && delete conditions.tags
     const result = await Article.findAndCountAll({
       where:{...conditions},
-      offset: (pageNum - 1) * pageSize,
-      limit: pageSize,
+      offset: (current - 1) * pageSize,
+      limit: Number(pageSize),
       order:[['id','DESC']]
     })
     ctx.body = formatResult(result,true)
