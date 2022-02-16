@@ -1,16 +1,36 @@
-const DB = require("../../connect/mysql.js")
-class classifyMoudles {
-  insert(value){
-    let _sql = "insert into atc_classify set label=?,value=?"
-    return DB.query( _sql, value)
+const {sequelize} = require("../../connect/mysql.js");
+const { Model, DataTypes,Sequelize } = require("sequelize");
+class Categorize extends Model {}
+Categorize.init({
+  // 在这里定义模型属性
+  id: {
+    type: DataTypes.INTEGER, autoIncrement: true,primaryKey:true
+  },
+  // id: {
+  //   primaryKey:true,
+  //   type: DataTypes.UUID,
+  //   defaultValue: Sequelize.UUIDV4 // 或 Sequelize.UUIDV1
+  // },
+  label: {
+    type: DataTypes.STRING,
+    allowNull:false
+  },
+  value: {
+    type: DataTypes.STRING,
+    // allowNull 默认为 true
+    allowNull:false
+  },
+  createdAt:{
+    type: DataTypes.DATE
+  },
+  updatedAt :{
+    type: DataTypes.DATE
   }
-  modify(value,params){
-    let _sql = `update atc_classify set label=?,value=? where id=${params}`
-    return DB.query( _sql, value)
-  }
-  remove(value,id){
-    let _sql = `DELETE FROM atc_classify where id='${id}'`;
-    return DB.query( _sql, value)
-  }
-}
-module.exports.commonMoudles = classifyMoudles
+}, {
+  // 这是其他模型参数
+  timestamps: true,
+  sequelize, // 我们需要传递连接实例
+  modelName: 'atc_categorizes' // 我们需要选择模型名称
+});
+
+module.exports.Tags = Categorize

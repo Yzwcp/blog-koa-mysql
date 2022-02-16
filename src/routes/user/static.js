@@ -1,20 +1,46 @@
-const DB = require("../../connect/mysql.js")
-class userMoudles {
-  static insert(value,username){
-    let _sql = `insert into user (username,password) select ?,? from dual where not exists(select * from user where username = `+"'"+username+"'"+')'
-    return DB.query( _sql, value)
+const {sequelize} = require("../../connect/mysql.js");
+const { Model, DataTypes,Sequelize } = require("sequelize");
+class User extends Model {}
+User.init({
+  // 在这里定义模型属性
+  id: {
+    type: DataTypes.INTEGER, autoIncrement: true,primaryKey:true
+  },
+  // id: {
+  //   primaryKey:true,
+  //   type: DataTypes.UUID,
+  //   defaultValue: Sequelize.UUIDV4 // 或 Sequelize.UUIDV1
+  // },
+  nickName: {
+    type: DataTypes.STRING,
+    allowNull:false
+  },
+  auth: {
+    type: DataTypes.STRING,
+    // allowNull 默认为 true
+    allowNull:false
+  },
+  email:{
+    type: DataTypes.STRING,
+    // allowNull 默认为 true
+    allowNull:false
+  },
+  phone:{
+    type: DataTypes.STRING,
+  },
+  password:{
+    type: DataTypes.STRING,
+  },
+  createdAt:{
+    type: DataTypes.DATE
+  },
+  updatedAt :{
+    type: DataTypes.DATE
   }
-  static login(value,params){
-    let _sql = `select * from user where username = '${params.username}' and password='${params.psdMd5}'`
-    return DB.query( _sql, value)
-  }
-  static remove(value,id){
-    let _sql = `DELETE FROM article where id='${id}'`;
-    return DB.query( _sql, value)
-  }
-  static conditionQuery(value,params){
-    let _sql = `select * from user where username = '${params.username}' `
-    return DB.query( _sql, value)
-  }
-}
-module.exports.userMoudles = userMoudles
+}, {
+  // 这是其他模型参数
+  timestamps: true,
+  sequelize, // 我们需要传递连接实例
+  modelName: 'user' // 我们需要选择模型名称
+});
+module.exports.User = User

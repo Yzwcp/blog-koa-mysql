@@ -52,7 +52,6 @@ tagsRouter.post('/remove', async (ctx) => {
     const {id} = ctx.request.body
     if( !id )return ctx.body = formatResult({},false,Tips.LACK_PARAMS)
     let result = await Tags.destroy({ where:{id}})
-    console.log(result)
     if(result>0)return  ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
     ctx.body = formatResult(result,false,Tips.HANDLE_ERR);
   }catch (e) {

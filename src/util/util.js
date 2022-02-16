@@ -11,6 +11,7 @@ const Tips = {
   LACK_PARAMS:'缺少入参',
   HANDLE_SUCCESS :"操作成功",
   HANDLE_ERR :"操作失败",
+  QUERY_ACC_ERROR :"密码错误",
 
 }
 module.exports = {

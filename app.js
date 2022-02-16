@@ -5,25 +5,23 @@ const koaJwt = require('koa-jwt');
 const jwt = require('jsonwebtoken')
 const app =new Koa()
 const logger = require('koa-logger')
+const {verifyToken} =require('./src/authentication/token.js')
 
-// app.use(koaJwt({ secret: 'umep_app_secret' }).unless({
-//   // 登录接口不需要验证
-//   path: [/^\/query/,/^\/register/,/^\/login/,/^\/imageList/,/^\/upload/,/^\/thirdparty/,'save']
-// }));
 // app.use(async (ctx, next) => {
-//   return next().catch((err) => {
-//     if (err.status === 401) {
-//       ctx.status = 401;
-//       ctx.body = {
-//         code: 401,
-//         message:err.message
-//       }
-//     } else {
-//       throw err;
-//     }
-//   })
+//   //取出来源 来源为admin请求的需要token校验
+//   try {
+//     const { authorization = null } = ctx.request.header
+//     if(authorization===null) throw({message:'未携带token'})
+//     const token = authorization.replace('Bearer ', '')
+//     verifyToken(token).then(async()=>{
+//       await next()
+//     }).catch((e)=>{
+//       throw e
+//     })
+//   } catch (e) {
+//     ctx.throw(401, e.message)
+//   }
 // });
-
 // logger
 app.use(async (ctx, next) => {
   const start = new Date()

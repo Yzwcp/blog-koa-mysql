@@ -25,15 +25,16 @@
 //         })
 //     })
 // }
-const { Sequelize } = require('sequelize');
+const { Sequelize,Op } = require('sequelize');
+
 const sequelize = new Sequelize('blog', 'blog', 'Nhp6Nh3HDYS7JJEi', {
     host: '139.196.155.67',
     dialect:'mysql' /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
 });
-// (async () => {
-//   await sequelize.sync();
-//   // 这里是代码
-// })();
+(async () => {
+  await sequelize.sync({alter:true});
+  // 这里是代码
+})();
 try {
   sequelize.authenticate();
   console.log('Connection has been established successfully.');
@@ -41,5 +42,5 @@ try {
   console.error('Unable to connect to the database:', error);
 }
 module.exports = {
-  sequelize
+  sequelize,Op
 }

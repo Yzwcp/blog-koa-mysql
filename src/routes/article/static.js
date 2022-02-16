@@ -48,7 +48,7 @@ Article.init({
   // 这是其他模型参数
   timestamps: true,
   sequelize,
-  modelName: 'article'
+  modelName: 'articles'
 });
 
 module.exports.Article = Article
