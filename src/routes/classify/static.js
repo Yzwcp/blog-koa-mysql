@@ -33,4 +33,4 @@ Categorize.init({
   modelName: 'atc_categorizes' // 我们需要选择模型名称
 });
 
-module.exports.Tags = Categorize
+module.exports.Categorize = Categorize

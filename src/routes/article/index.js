@@ -61,6 +61,8 @@ articleRouter.post('/save',auth, async (ctx) => {
  */
 articleRouter.post('/modify', async (ctx) => {
   const body = ctx.request.body
+  const {id} = body
+  delete body.id
   //AES对称加密
   if(body.password) body.password = encrypt(body.password)
   try {

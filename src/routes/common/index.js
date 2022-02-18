@@ -1,36 +1,60 @@
 const Router = require('koa-router')
 const commonRouter = new Router()
-const DB = require("../../connect/mysql.js")
-const {auth,client,formatResult} = require('../../util/util.js')
-const jwt = require('koa-jwt')({secret:'umep_app_secret'});
+const {Op} = require("../../connect/mysql.js")
 const multer  = require("@koa/multer");
 const co = require("co");
 const fs = require("fs");
-const path =require('path')
-const {commonMoudles} = require('./static.js')
-/***
- * 评论喜欢
- */
-commonRouter.post('/saveCommonLike', async (ctx) => {
-  const {where,userLikeMd5,dbName} = ctx.request.body
-  if(where) wo="where "+ where
-  let result = await commonMoudles.guestList([],dbName,userLikeMd5,wo)
+const {formatResult,Tips,client} = require('../../util/util.js')
 
-  ctx.body = result;
-});
-/**
- * 通用查询接口
+const {Comment} = require('../comment/static.js')
+const {Article} = require('../article/static.js')
+
+
+
+
+commonRouter.prefix('/common')
+/***
+ * 喜欢
+ * @type 1:文章喜欢,2评论喜欢,3博客喜欢
+ * @nickName 用户自定义昵称
+ * @email:用户邮箱 推荐qq邮箱
+ * @commentId:评论id
  */
-commonRouter.get('/query',auth, async (ctx) => {
-  const {query} = ctx.request
-  const {dbName,where="",orderBy="Id",limit="0,10"} = query
-  let wo = ''
-  if(where) wo="where "+ where
-  const count  = await commonMoudles.countQuery([],dbName,wo)
-  const result = await commonMoudles.commonQuery([],dbName,wo,orderBy,limit)
-  if(count.success) result.total = count.result[0].total//总记录数
-  ctx.body = result
+commonRouter.post('/like/save', async (ctx) => {
+  const {type,commentId,articleId,agentMd5} = ctx.request.body
+
+  if(type==2){
+    // 点赞评论
+    try {
+      const queryRe = await Comment.findOne({where:{id:commentId}})
+      let listStr = queryRe.likeList
+      if (listStr===null) listStr=''
+      if( listStr.indexOf(agentMd5)>-1) throw '你已经点赞该评论了'
+      const result = await Comment.update({
+        likeList:listStr+","+agentMd5
+      },{where:{id:commentId}})
+      if(result.includes(1))return  ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
+    }catch (e) {
+      ctx.body = formatResult(e,false,Tips.HANDLE_ERR);
+    }
+  }else if(type==1){
+    //点赞文章
+    try {
+      const queryRe = await Article.findOne({where:{id:articleId}})
+      let listStr = queryRe.likeList
+      if (listStr===null) listStr=''
+      if( listStr.indexOf(agentMd5)>-1) throw '你已经点赞该文章了'
+      const result = await Article.update({
+        likeList:listStr+","+agentMd5
+      },{where:{id:articleId}})
+      if(result.includes(1))return  ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
+    }catch (e) {
+      ctx.body = formatResult(e,false,Tips.HANDLE_ERR);
+    }
+  }
+
 });
+
 /**
  * 查询图片接口
  */

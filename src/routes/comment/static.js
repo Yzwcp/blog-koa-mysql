@@ -20,7 +20,7 @@ Comment.init({
   likeList:{
     type: DataTypes.STRING,
   },
-  nickName:{
+  cEmail:{
     type: DataTypes.STRING,
   },
   parentId:{

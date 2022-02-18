@@ -20,6 +20,16 @@ Article.init({
     // allowNull 默认为 true
     allowNull:false
   },
+  password:{
+    type: DataTypes.STRING
+  },
+  tags:{
+    type: DataTypes.STRING
+  },
+  private:{
+    type: DataTypes.BOOLEAN,
+    defaultValue:false
+  },
   categorize:{
     type: DataTypes.STRING
   },
@@ -41,9 +51,7 @@ Article.init({
   updatedAt :{
     type: DataTypes.DATE
   },
-  password:{
-    type: DataTypes.STRING
-  }
+
 }, {
   // 这是其他模型参数
   timestamps: true,
