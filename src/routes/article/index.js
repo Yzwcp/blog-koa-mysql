@@ -36,6 +36,10 @@ articleRouter.get('/query', async (ctx) => {
       limit: Number(pageSize),
       order:[['id','DESC']]
     })
+    //如果有密码 不返回文章信息
+    result.rows.map(item=>{
+      if(item.password)  item.body = "need password"
+    })
     ctx.body = formatResult(result,true)
   }catch (e) {
     ctx.body = formatResult(e,false,Tips.QUERY_ERROR)
@@ -83,18 +87,21 @@ articleRouter.post('/modify', async (ctx) => {
 articleRouter.post('/detail', async (ctx) => {
   try {
     const body = ctx.request.body
-    if( !body.id ) throw '没有id'
-    const condition = {id:body.id,password:body.password}
-    if(condition.password){
-      condition.password = encrypt(body.password)
-    }else{
-      delete condition.password
+    if( !body.id ) throw('没有id')
+    const result = await Article.findOne({ where:{id:body.id}})
+    if(!result) throw Tips.QUERY_ACC_ERROR
+    // 文章有密码
+    ctx.body = result
+    if(result.password){
+      if(body.password && ( encrypt(body.password) === result.password)){
+        ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
+      }else{
+        throw '密码错误'
+      }
     }
-    const result = await Article.findOne({ where:condition})
-    if(!result)return  ctx.body = formatResult(Tips.QUERY_ACC_ERROR,true,Tips.HANDLE_ERR);
     ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
   }catch (e) {
-    ctx.body = formatResult(e,false,e);
+    ctx.body = formatResult({},false,e);
   }
 });
 /**

@@ -16,7 +16,7 @@ Article.init({
     allowNull:false
   },
   body: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(8000),
     // allowNull 默认为 true
     allowNull:false
   },
