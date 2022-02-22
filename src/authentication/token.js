@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const key = "blog";
-function setToken(payload,expiresIn="1h") {
+function setToken(payload,expiresIn="1d") {
   return new Promise((resolve, reject) => {
     jwt.sign(payload, key, { expiresIn }, (err, hash) => {
       err ? reject(err.message) : resolve(hash)

@@ -11,6 +11,7 @@ Article.init({
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4 // 或 Sequelize.UUIDV1
   },
+  //1普通用户 100 管理员
   auth: {
     type: DataTypes.STRING,
     allowNull:false
@@ -21,7 +22,7 @@ Article.init({
     allowNull:false
   },
   password:{
-    type: DataTypes.STRING
+    type: DataTypes.STRING()
   },
   tags:{
     type: DataTypes.STRING
