@@ -7,14 +7,16 @@ const {verifyToken} =require('./src/authentication/token.js')
 const router =  require('./src/index.js')
 const cors = require('@koa/cors')
 const bodyParser = require('koa-bodyparser')
-const wihteList = ['login','query']
+const wihteList = ['login','query','detail']
 
 app.use(cors())
 // logger
 app.use( async (ctx, next) => {
   //取出来源 来源为admin请求的需要token校验
+
   let is = wihteList.filter(item=>{
     return(ctx.request.path.indexOf(item)>-1)
+
   })
   if(is.length>0 && ctx.request.path.indexOf('admin')<1)return  await next()
   try {
