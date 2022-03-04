@@ -22,6 +22,7 @@
     "sequelize": "^6.16.1"
   },
   "devDependencies": {
-    "co": "^4.6.0"
+    "co": "^4.6.0",
+    "socket.io": "^4.4.1"
   }
 }
