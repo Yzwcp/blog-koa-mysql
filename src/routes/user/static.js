@@ -1,6 +1,7 @@
 const {sequelize} = require("../../connect/mysql.js");
 const { Model, DataTypes,Sequelize } = require("sequelize");
 class User extends Model {}
+const times = new Date().getTime()
 User.init({
   // 在这里定义模型属性
   id: {
@@ -11,19 +12,28 @@ User.init({
   //   type: DataTypes.UUID,
   //   defaultValue: Sequelize.UUIDV4 // 或 Sequelize.UUIDV1
   // },
-  nickName: {
-    type: DataTypes.STRING,
-    allowNull:false
-  },
   auth: {
     type: DataTypes.STRING,
     // allowNull 默认为 true
-    allowNull:false
   },
   email:{
     type: DataTypes.STRING,
     // allowNull 默认为 true
-    allowNull:false
+  },
+  openid:{
+    type: DataTypes.STRING,
+    // allowNull 默认为 true
+  },
+  userInfo:{
+    type: DataTypes.STRING,
+    // allowNull 默认为 true
+  },
+  unionid:{
+    type: DataTypes.STRING,
+    // allowNull 默认为 true
+  },
+  isHelp:{
+    type: DataTypes.BOOLEAN,
   },
   phone:{
     type: DataTypes.STRING,

@@ -116,9 +116,10 @@ commonRouter.post("/upload",async (ctx, next) => {
     // client.useBucket(ali_oss.bucket);
     try {
       //上传到阿里云oss
-      const result = yield client.put('blog/article_cover/'+key, localFile);
+      const imgpath = 'wx/'+key
+      const result = yield client.put(imgpath, localFile);
       if(result.res.status==200){
-        return  ctx.body = formatResult({name:key,url:result.url+imgWidth},true)
+        return  ctx.body = formatResult({name:key,url:imgpath},true)
       }
       throw ({result})
     }catch (e) {

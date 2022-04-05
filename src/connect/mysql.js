@@ -27,13 +27,18 @@
 // }
 const { Sequelize,Op } = require('sequelize');
 
-const sequelize = new Sequelize('blog', 'blog', 'Nhp6Nh3HDYS7JJEi', {
+const sequelize = new Sequelize('wx', 'wx', 'j6KwiJmFLfdrGa4Z', {
     host: '139.196.155.67',
-    dialect:'mysql' /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
+    dialect:'mysql', /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
+    timezone: '+08:00',
+    dialectOptions: {
+      dateStrings: true,
+      typeCast: true
+    },
 });
-//模型同步mysql
+// 模型同步mysql
 // (async () => {
-//   await sequelize.sync({alter:true});
+//   await sequelize.sync({force:true});
 //   // 这里是代码
 // })();
 try {
