@@ -52,7 +52,8 @@ userRouter.post('/wx/login', async (ctx) => {
         },
         defaults:{ userInfo,auth:'wx'}
       });
-      ctx.body=formatResult(result,true)
+      const token =await setToken({id:result.id,auth:result.auth,openid:result.openid},)
+      ctx.body=formatResult({result:result.userInfo,token},true)
     }
     // return
     // const result = await User.findOne({where:{email}})

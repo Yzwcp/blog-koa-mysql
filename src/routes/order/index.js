@@ -4,6 +4,7 @@ const {Op} = require("../../connect/mysql.js")
 const {encrypt} =require('../../authentication/hash')
 const {auth,formatResult,Tips} = require('../../util/util.js')
 const {Order} = require('./static.js')
+const {Bulk} = require('../bulk/static')
 
 orderRouter.prefix('/wx/order')
 /**
@@ -55,8 +56,22 @@ orderRouter.post('/save', async (ctx) => {
   const body = ctx.request.body
   // {auth, body,categorize,title,tags,myDescribe,likeList,cover}
   // 加密拼团
+  const {bulkId} = body
+  const bulkdetail = await Bulk.findOne({ where:{id:bulkId}})
+
+  const nowTimeStamp = new Date().getTime() 
+  const towdaylater = new Date(nowTimeStamp+ 48 * 60 * 60 * 1000).toLocaleString()
+  const endingTimeStamp = new Date(bulkdetail.endtime).getTime()
+  const c = endingTimeStamp-nowTimeStamp
+  
   try {
-    const result = await Order.create({...body})
+    if(c<=0) throw '活动过期'
+    const result = await Order.create({
+      endtime:towdaylater,
+      bulk_id:bulkId,
+      openid:ctx.state.user.openid,
+      creator:ctx.state.user.openid,
+    })
     ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
   }catch (e) {
     ctx.body = formatResult(e,false,Tips.HANDLE_ERR)
@@ -89,18 +104,11 @@ orderRouter.post('/detail', async (ctx) => {
   try {
     const body = ctx.request.body
     if( !body.id ) throw('没有id')
-    const result = await Order.findOne({ where:{id:body.id,private:true}})
+    const orderesult = await Order.findOne({ where:{id:body.id,private:true}})
+    const bulkresult = await Bulk.findOne({ where:{id:orderesult.bulk_id}})
+
     if(!result) throw Tips.QUERY_ACC_ERROR
-    // 拼团有密码
-    ctx.body = result
-    if(result.password){
-      if(body.password && ( encrypt(body.password) === result.password)){
-        ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
-      }else{
-        throw '密码错误'
-      }
-    }
-    ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
+    ctx.body = formatResult({orderesult,bulkresult},true,Tips.HANDLE_SUCCESS);
   }catch (e) {
     ctx.body = formatResult({},false,e);
   }

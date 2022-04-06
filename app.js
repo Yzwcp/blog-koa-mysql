@@ -7,7 +7,7 @@ const {verifyToken} =require('./src/authentication/token.js')
 const router =  require('./src/index.js')
 const cors = require('@koa/cors')
 const bodyParser = require('koa-bodyparser')
-const wihteList = ['login','query','detail','register','common','wx']
+const wihteList = ['login','query','detail','register','common',]
 
 app.use(cors())
 // logger
@@ -18,14 +18,16 @@ app.use( async (ctx, next) => {
     return(ctx.request.path.indexOf(item)>-1)
 
   })
-  if(is.length>0 && ctx.request.path.indexOf('admin')<1)return  await next()
+  if(is.length>0 && ctx.request.path.indexOf('admin')<1 )return  await next()
   try {
     const { authorization = null } = ctx.request.header
     if(!authorization) throw '未携带token'
     const token = authorization.replace('Bearer ', '')
     const {success,result,message} =  await verifyToken(token)
     if(!success) throw message
-    ctx.state.auth=result.auth;
+    ctx.state.auth=result.auth;                                             
+    ctx.state.user=result
+    console.log(ctx.state.user);
     await next()
   } catch (e) {
     ctx.throw(401, e)

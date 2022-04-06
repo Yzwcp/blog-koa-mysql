@@ -37,7 +37,11 @@ Order.init({
     defaultValue:0
   },
   bulk_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
+    allowNull:false
+  },
+  endtime:{
+    type: DataTypes.STRING,
     allowNull:false
   },
   createdAt:{

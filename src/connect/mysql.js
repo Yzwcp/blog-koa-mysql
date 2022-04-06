@@ -38,7 +38,7 @@ const sequelize = new Sequelize('wx', 'wx', 'j6KwiJmFLfdrGa4Z', {
 });
 // 模型同步mysql
 // (async () => {
-//   await sequelize.sync({force:true});
+//   await sequelize.sync({alter:true});
 //   // 这里是代码
 // })();
 try {
