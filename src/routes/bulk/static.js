@@ -1,5 +1,6 @@
 const {sequelize} = require("../../connect/mysql.js");
 const { Model, DataTypes,Sequelize } = require("sequelize");
+const { Order } = require("../order/static.js");
 class Bulk extends Model {}
 Bulk.init({
   // 在这里定义模型属性
@@ -40,7 +41,7 @@ Bulk.init({
     type: DataTypes.STRING
   },
   endtime :{
-    type: DataTypes.STRING
+    type: DataTypes.BIGINT
   },
   sort :{
     type: DataTypes.INTEGER
@@ -66,5 +67,7 @@ Bulk.init({
   sequelize,
   modelName: 'bulks'
 });
-
+// Bulk.associate = function() {
+//   Bulk.belongsTo(Order, {foreignKey: 'bulk_id'})
+// }
 module.exports.Bulk = Bulk

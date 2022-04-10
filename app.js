@@ -13,7 +13,7 @@ app.use(cors())
 // logger
 app.use( async (ctx, next) => {
   //取出来源 来源为admin请求的需要token校验
-
+  console.log(ctx.request.header.authorization);
   let is = wihteList.filter(item=>{
     return(ctx.request.path.indexOf(item)>-1)
 

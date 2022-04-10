@@ -1,13 +1,14 @@
 const Router = require('koa-router')
-const orderRouter = new Router()
+const groupAddRouter = new Router()
 const {Op} = require("../../connect/mysql.js")
 const {encrypt} =require('../../authentication/hash')
 const {auth,formatResult,Tips} = require('../../util/util.js')
-const {Order} = require('./static.js')
+const {GroupAdd} = require('./static.js')
 const {Bulk} = require('../bulk/static')
-const {GroupAdd} = require('../groupAdd/static')
+const {Order} = require('../order/static')
+const { use } = require('../../index.js')
 
-orderRouter.prefix('/wx/order')
+groupAddRouter.prefix('/wx/group')
 /**
  * @api {POST} /article/query 获取拼团列表
  * @apiName list
@@ -17,10 +18,10 @@ orderRouter.prefix('/wx/order')
  * @apiParam (可选) {String} title 模糊查询标题（可选）
  * @apiParam (可选) {String} tags 模糊查询标签（可选）
  * @apiSampleRequest /article/query
- * @apiGroup Order
+ * @apiGroup GroupAdd
  * @apiVersion 1.0.0
  */
-orderRouter.get('/query', async (ctx) => {
+groupAddRouter.get('/query', async (ctx) => {
   try {
     const {title,categorize,tags,pageSize=10,current=1} = ctx.request.query
     let conditions = {
@@ -30,13 +31,13 @@ orderRouter.get('/query', async (ctx) => {
       // private:true
     }
     
-  Order.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
+  GroupAdd.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
     //没有条件传进来 删除查询条件
     // !title && delete conditions.title
     // !categorize && delete conditions.categorize
     // !tags && delete conditions.tags
-    // Order.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
-    const result = await Order.findAndCountAll({
+    // GroupAdd.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
+    const result = await GroupAdd.findAndCountAll({
       where:{...conditions},
       include:[Bulk],
       offset: (current - 1) * pageSize,
@@ -51,57 +52,61 @@ orderRouter.get('/query', async (ctx) => {
 /***
  * 添加拼团
  */
-orderRouter.post('/save', async (ctx) => {
+groupAddRouter.post('/save', async (ctx) => {
   const body = ctx.request.body
-  // {auth, body,categorize,title,tags,myDescribe,likeList,cover}
-  // 加密拼团
-  const {bulkId} = body
+  const {bulk_id,order_id} = body
   const nowTimeStamp = Number(new Date().getTime() )
-
   const user = ctx.state.user
+  // 先查询下本活动有木有被该人帮助过
   try {
-    //查询是否已经创建过该商品的拼团
-    const orderResult = await Order.findOne({
+    const groupAddResult = await GroupAdd.findOne({
       where:{
         openid:user.openid,
-        bulk_id:bulkId,
-        endtime:{
-          [Op.gte]:nowTimeStamp,   
-        }
+        bulk_id:bulk_id,
+        order_id:order_id,
+        uid:user.id
       }
     })
-    if(orderResult){
-      ctx.body = formatResult({id:orderResult.id},false,Tips.HANDLE_WX_HASRECORD);
-      return
+    if(groupAddResult){
+      throw '您已经帮助过他了'  
     }
-    //查询订单关联的商品
-    const bulkdetail = await Bulk.findOne({ where:{id:bulkId}})
-    const towdaylater = nowTimeStamp+ 48 * 60 * 60 * 1000//俩天后过期
-    const endingTimeStamp = new Date(bulkdetail.endtime).getTime()
-    const c = endingTimeStamp-nowTimeStamp
-  
-    if(c<=0) throw '活动过期'
-    const result = await Order.create({
-      endtime:towdaylater,
-      bulk_id:bulkId,
-      openid:ctx.state.user.openid,
-      creator:ctx.state.user.openid,
+
+    //查询订单结束时间
+    const orderdetail = await Order.findOne({
+      where:{
+        id:order_id,
+        endtime:{[Op.lte]:nowTimeStamp,},
+      }
+    })
+    if(orderdetail) throw '订单已经过期'  
+    
+    //查询订单关联的商品结束时间
+    const bulkdetail = await Bulk.findOne({ where:{id:bulk_id,endtime:{[Op.lte]:nowTimeStamp,}}})
+    if(bulkdetail) throw '活动已经过期'
+
+    const result = await GroupAdd.create({
+      ...body,
+      uid:user.id,
+      startime:nowTimeStamp,
+      openid:user.openid,
+      parent:0,
     })
     ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
   }catch (e) {
+    console.log(e);
     ctx.body = formatResult(e,false,Tips.HANDLE_ERR)
   }
 });
 /**
  * 修改拼团
  */
-orderRouter.post('/modify', async (ctx) => {
+groupAddRouter.post('/modify', async (ctx) => {
   const body = {...ctx.request.body}
   const {id,} = body
   delete body.id
   //AES对称加密
   try {
-    let result = await Order.update({
+    let result = await GroupAdd.update({
       ...body
     },{
       where:{id}
@@ -115,36 +120,14 @@ orderRouter.post('/modify', async (ctx) => {
 /**
  * 查看拼团
  */
-orderRouter.post('/detail', async (ctx) => {
+groupAddRouter.post('/detail', async (ctx) => {
   try {
     const body = ctx.request.body
     if( !body.id ) throw('没有id')
-    // Order.hasMany(GroupAdd)
-    // Order.hasMany(GroupAdd)
+    const orderesult = await GroupAdd.findOne({ where:{id:body.id}})
+    const bulkresult = await Bulk.findOne({ where:{id:orderesult.bulk_id}})
 
-    // GroupAdd.belongsTo(Order, { foreignKey: 'order_id', targetKey: 'id' });
-    // Order.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
-
-    //为用户和学校建立关系  一对多
-    Order.hasMany(GroupAdd, {
-      foreignKey: 'order_id',
-      sourceKey: 'id',
-      constraints: false
-    })
-    
-    GroupAdd.belongsTo(Order, {
-      foreignKey: 'order_id',
-      targetKey: 'id',
-      constraints: false
-    })
-
-    const orderesult = await Order.findOne({ where:{id:body.id},include:[{
-      model:GroupAdd
-    }]})
-    // const groupAddresult = await GroupAdd.findOne({ include:[Order]})
-    // const bulkresult = await Bulk.findOne({ where:{id:orderesult.bulk_id}})
-
-    ctx.body = formatResult({orderesult},true,Tips.HANDLE_SUCCESS);
+    ctx.body = formatResult({orderesult,bulkresult},true,Tips.HANDLE_SUCCESS);
   }catch (e) {
     ctx.body = formatResult({},false,e);
   }
@@ -152,12 +135,12 @@ orderRouter.post('/detail', async (ctx) => {
 /**
  * 删除拼团
  */
-orderRouter.post('/remove', async (ctx) => {
+groupAddRouter.post('/remove', async (ctx) => {
   try {
     const {id} = ctx.request.body
     console.log(id);
     if( !id )return ctx.body = formatResult({},false,Tips.LACK_PARAMS)
-    let result = await Order.destroy({ where:{id}})
+    let result = await GroupAdd.destroy({ where:{id}})
     if(result>0)return  ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
     throw "查询失败"
   }catch (e) {
@@ -175,10 +158,10 @@ orderRouter.post('/remove', async (ctx) => {
  * @apiParam (可选) {String} title 模糊查询标题（可选）
  * @apiParam (可选) {String} tags 模糊查询标签（可选）
  * @apiSampleRequest /article/query
- * @apiGroup Order
+ * @apiGroup GroupAdd
  * @apiVersion 1.0.0
  */
-orderRouter.get('/admin/query', async (ctx) => {
+groupAddRouter.get('/admin/query', async (ctx) => {
   try {
     const {title,categorize,tags,pageSize=10,current=1} = ctx.request.query
     let conditions = {
@@ -190,7 +173,7 @@ orderRouter.get('/admin/query', async (ctx) => {
     !title && delete conditions.title
     !categorize && delete conditions.categorize
     !tags && delete conditions.tags
-    const result = await Order.findAndCountAll({
+    const result = await GroupAdd.findAndCountAll({
       where:{...conditions},
       offset: (current - 1) * pageSize,
       limit: Number(pageSize),
@@ -208,4 +191,4 @@ orderRouter.get('/admin/query', async (ctx) => {
     ctx.body = formatResult(e,false,Tips.QUERY_ERROR)
   }
 });
-module.exports = orderRouter.routes()
+module.exports = groupAddRouter.routes()

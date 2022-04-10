@@ -10,6 +10,7 @@ const userRouter = require('./routes/user')
 const thirdPartyRouter = require('./routes/thirdpartyPost')
 const bulkRouter = require('./routes/bulk')
 const orderRouter = require('./routes/order')
+const groupAddRouter = require('./routes/groupAdd')
 
 router.use(articleRouter)
 .use(classifyRouter)
@@ -20,4 +21,5 @@ router.use(articleRouter)
 .use(thirdPartyRouter)
 .use(bulkRouter)
 .use(orderRouter)
+.use(groupAddRouter)
 module.exports = router
