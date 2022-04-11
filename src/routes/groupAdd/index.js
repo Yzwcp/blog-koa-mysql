@@ -81,8 +81,8 @@ groupAddRouter.post('/save', async (ctx) => {
     if(orderdetail) throw '订单已经过期'  
     
     //查询订单关联的商品结束时间
-    const bulkdetail = await Bulk.findOne({ where:{id:bulk_id,endtime:{[Op.lte]:nowTimeStamp,}}})
-    if(bulkdetail) throw '活动已经过期'
+    // const bulkdetail = await Bulk.findOne({ where:{id:bulk_id,endtime:{[Op.lte]:nowTimeStamp,}}})
+    // if(bulkdetail) throw '活动已经过期'
 
     const result = await GroupAdd.create({
       ...body,

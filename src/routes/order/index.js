@@ -123,7 +123,8 @@ orderRouter.post('/detail', async (ctx) => {
     // Order.hasMany(GroupAdd)
 
     // GroupAdd.belongsTo(Order, { foreignKey: 'order_id', targetKey: 'id' });
-    // Order.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
+    Bulk.hasMany(Order, { foreignKey: 'bulk_id', targetKey: 'id' });
+    Order.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
 
     //为用户和学校建立关系  一对多
     Order.hasMany(GroupAdd, {
@@ -137,14 +138,22 @@ orderRouter.post('/detail', async (ctx) => {
       targetKey: 'id',
       constraints: false
     })
-
+    //attributes:需要显示的字段
     const orderesult = await Order.findOne({ where:{id:body.id},include:[{
-      model:GroupAdd
+      model:GroupAdd,
+      // where:{
+      //   bulk_id:bulk_id
+      // },
+      attributes: [
+        'avatars','bulk_id','nickname','id','parent','uid','status'
+      ]
+    },{
+      model:Bulk
     }]})
     // const groupAddresult = await GroupAdd.findOne({ include:[Order]})
     // const bulkresult = await Bulk.findOne({ where:{id:orderesult.bulk_id}})
 
-    ctx.body = formatResult({orderesult},true,Tips.HANDLE_SUCCESS);
+    ctx.body = formatResult(orderesult,true,Tips.HANDLE_SUCCESS);
   }catch (e) {
     ctx.body = formatResult({},false,e);
   }
