@@ -6,7 +6,6 @@ const {auth,formatResult,Tips} = require('../../util/util.js')
 const {GroupAdd} = require('./static.js')
 const {Bulk} = require('../bulk/static')
 const {Order} = require('../order/static')
-const { use } = require('../../index.js')
 
 groupAddRouter.prefix('/wx/group')
 /**
