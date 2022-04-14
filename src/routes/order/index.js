@@ -22,13 +22,24 @@ orderRouter.prefix('/wx/order')
  */
 orderRouter.get('/query', async (ctx) => {
   try {
-    const {title,categorize,tags,pageSize=10,current=1} = ctx.request.query
+    const {title,categorize,tags,pageSize=10,current=1,status=1} = ctx.request.query
     let conditions = {
+
       // categorize:categorize,
       // title:{[Op.substring]: title},// 模糊查询
       // tags:{[Op.substring]: tags},
       // private:true
+      openid:ctx.state.user.openid
     }
+    const nowTimeStamp = Number(new Date().getTime() )
+    
+    if(status==1){
+      conditions.endtime={
+        [Op.gt]:nowTimeStamp,
+      }
+
+    }
+    console.log(conditions);
     
   Order.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
     //没有条件传进来 删除查询条件
@@ -41,10 +52,12 @@ orderRouter.get('/query', async (ctx) => {
       include:[Bulk],
       offset: (current - 1) * pageSize,
       limit: Number(pageSize),
-      order:[['id','DESC']]
+      order:[['id','DESC']],
+      
     })
     ctx.body = formatResult(result,true)
   }catch (e) {
+    console.log(e);
     ctx.body = formatResult(e,false,Tips.QUERY_ERROR)
   }
 });

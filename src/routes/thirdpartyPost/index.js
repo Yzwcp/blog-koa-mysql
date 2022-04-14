@@ -105,9 +105,7 @@ const postDetail = {
 
 
 thirdparty.post('/savedetail', async (ctx) => {
-	
-	ctx.body=JSON.stringify({code:1})
-	return
+
   console.log(ctx.request.body)
   let body = ctx.request.body
   body.personid = 111447
