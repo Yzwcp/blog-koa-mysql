@@ -2,6 +2,82 @@ const Router = require('koa-router')
 const thirdparty = new Router()
 const {util} = require('../../util/util.js')
 const koa2Req = require('koa2-request')
+var request = require('request');
+const qs = require('qs')
+const baseUrl  ='http://39.104.62.121:8080/skillcenterwx'
+const token = "?token=1729873020190720200"
+const fs =require('fs')
+
+// thirdparty.prefix('/rest/wechatapplettrain')
+const p = (url,form)=>{
+	return new Promise((resolve,rejeck)=>{
+		request.post({url, form}, (error, response, body) =>{
+		    if (!error && response.statusCode == 200) {
+		      resolve(response.body)
+		    }else{
+		      rejeck(error)
+		    }
+		})
+	})
+}
+
+thirdparty.post('/proxy', async (ctx) => {
+	let body = ctx.request.body
+	// console.log(ctx.query.url);
+	const url =baseUrl+ctx.query.url +token
+	//删除代理标记url
+	//测试死数据
+	if(body.hasOwnProperty('personid')){
+    body['personid'] = 128587
+  }
+  if(body.hasOwnProperty('phoneno')){
+    body['phoneno'] =  17395715159
+  }
+	// console.log(url);
+	// console.log(body);
+	try{
+		let result = await p(url,body)
+		// console.log(result);
+		let a =JSON.parse(result)
+		console.log(a);
+		ctx.body=JSON.stringify(result)
+		fs.writeFile('user.json', result, (err) => {
+		    if (err) {
+		        throw err;
+		    }
+		    console.log("JSON data is saved.");
+		});
+	}catch(err){ctx.body=JSON.stringify(err)}
+}); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const fiexdParams = {
   platform : 2,
   gkey : '000000',
@@ -25,16 +101,51 @@ const postDetail = {
   page_size:20,
   doc:1
 }
-thirdparty.prefix('/thirdparty')
-thirdparty.get('/category', async (ctx) => {
-  const thirdpartyResult =await koa2Req({url:'http://floor.huluxia.com/category/list/ANDROID/2.0',params:{...fiexdParams,is_hidden:1}})
-  if(thirdpartyResult.statusCode===200){
-    const result = JSON.parse(JSON.parse(JSON.stringify(thirdpartyResult.body)))
-    ctx.body=util.formatResult(result,true)
-  }else{
-    ctx.body=util.formatResult(result,false)
-  }
-});
+
+
+
+thirdparty.post('/savedetail', async (ctx) => {
+	
+	ctx.body=JSON.stringify({code:1})
+	return
+  console.log(ctx.request.body)
+  let body = ctx.request.body
+  body.personid = 111447
+  console.log(body);
+  var url = 'http://39.104.62.121:8080/skillcenterwx//rest/wechatapplettrain/addfacilitiessheet.action?token=1729873020190720200'
+    let a = new Promise((r,c)=>{
+      request.post({url:url, form:ctx.request.body}, (error, response, body) =>{
+        if (!error && response.statusCode == 200) {
+          // console.log(response.body);
+          // console.log(body);
+          r(response.body)
+        }else{
+          c(error)
+        }
+    })
+    })
+    
+    try{
+      const d = await a 
+		ctx.body=JSON.stringify(d)
+    }catch{
+		ctx.body=JSON.stringify(d)
+    }
+
+ 
+}); 
+thirdparty.post('/category', async (ctx) => {
+  // const thirdpartyResult =await koa2Req({url:'http://floor.huluxia.com/category/list/ANDROID/2.0',params:{...fiexdParams,is_hidden:1}})
+  // if(thirdpartyResult.statusCode===200){
+  //   const result = JSON.parse(JSON.parse(JSON.stringify(thirdpartyResult.body)))
+  //   ctx.body=util.formatResult(result,true)
+  // }else{
+  //   ctx.body=util.formatResult(result,false)
+  // }
+
+
+ 
+}); 
 thirdparty.get('/posts', async (ctx) => {
   const thirdpartyResult =await koa2Req({url:'http://floor.huluxia.com/post/list/ANDROID/2.0',qs:{...postsListParams,...fiexdParams}
   })

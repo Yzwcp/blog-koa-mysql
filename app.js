@@ -7,7 +7,7 @@ const {verifyToken} =require('./src/authentication/token.js')
 const router =  require('./src/index.js')
 const cors = require('@koa/cors')
 const bodyParser = require('koa-bodyparser')
-const wihteList = ['login','query','detail','register','common',]
+const wihteList = ['login','query','detail','register','common','thirdparty','proxy']
 
 app.use(cors())
 // logger
