@@ -41,8 +41,8 @@ Order.init({
     allowNull:false
   },
   endtime:{
-    type: DataTypes.STRING,
-    allowNull:false
+    type: DataTypes.BIGINT,
+    defaultValue:0
   },
   createdAt:{
     type: DataTypes.DATE
@@ -58,4 +58,7 @@ Order.init({
   modelName: 'bulkorders'
 });
 
+// Order.associate = function() {
+//   Order.belongsTo(Bulk, {foreignKey: 'bulk_id'})
+// }
 module.exports.Order = Order

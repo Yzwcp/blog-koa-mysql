@@ -12,7 +12,7 @@ const Tips = {
   HANDLE_SUCCESS :"操作成功",
   HANDLE_ERR :"操作失败",
   QUERY_ACC_ERROR :"改文章已经设为不可见，或者密码错误",
-
+  HANDLE_WX_HASRECORD:"已经有该数据"
 }
 module.exports = {
   Tips,

@@ -52,7 +52,7 @@ userRouter.post('/wx/login', async (ctx) => {
         },
         defaults:{ userInfo,auth:'wx'}
       });
-      const token =await setToken({id:result.id,auth:result.auth,openid:result.openid},)
+      const token =await setToken({id:result.id,auth:result.auth,openid:result.openid},'3600d')
       ctx.body=formatResult({result:result.userInfo,token},true)
     }
     // return

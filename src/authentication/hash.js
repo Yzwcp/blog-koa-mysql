@@ -24,6 +24,18 @@ function encrypt(a) {
   let enc = cipher.update(content, 'utf8', 'hex'); //编码方式从utf-8转为hex;
   return (enc += cipher.final('hex')); //编码方式转为hex;
 }
+
+const encrypt2 = (algorithm, content) => {
+  let hash = createHash(algorithm)
+  hash.update(content)
+  return hash.digest('hex')
+}
+/**
+ * @param {any} content
+ *  @return {string}
+ */
+const sha1 = (content) => encrypt2('sha1', content)
+
 function decrypt(enc) {
   //AES对称解密
   const decipher = crypto.createDecipher('aes192', secretkey);
@@ -33,5 +45,5 @@ function decrypt(enc) {
   return dec
 }
 module.exports = {
-  encrypt, decrypt
+  encrypt, decrypt,sha1
 }
