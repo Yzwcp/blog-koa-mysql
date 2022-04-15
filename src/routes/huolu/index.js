@@ -18,18 +18,20 @@ const fiexdParams = {
 }
 const postsListParams = {
   start:0,
-  count:20,
+  count:5,
   cat_id:43,//分类id
   tag_id:0,//标签
-  sort_by:0,//0：按回复,1按发布时间
+  sort_by:1,//0：按回复,1按发布时间
 }
+// categoryID:43实用软件
+// tagid  0 全部 4301 绿色软件4302原创工具 4304 影音播放 4303集合贴 4305通告活动
 const postDetail = {
   post_id:49896707,
   page_no:1,
   page_size:20, 
   doc:1
 }
-HuoL.prefix('/huolu')
+HuoL.prefix('/wx/huolu')
 HuoL.post('/category', async (ctx) => {
   const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/category/list/ANDROID/2.0',params:{...fiexdParams,is_hidden:1}})
   if(HuoLResult.statusCode===200){
@@ -39,11 +41,13 @@ HuoL.post('/category', async (ctx) => {
     ctx.body=formatResult(result,false)
   }
 
-
  
 }); 
 HuoL.get('/posts', async (ctx) => {
-  const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/list/ANDROID/2.0',qs:{...postsListParams,...fiexdParams}
+  const params = ctx.query
+  params.start =new Date().getTime()
+  console.log(params);
+  const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/list/ANDROID/2.0',qs:{...postsListParams,...fiexdParams,...params}
   })
   if(HuoLResult.statusCode===200){
     const result = JSON.parse(JSON.parse(JSON.stringify(HuoLResult.body)))

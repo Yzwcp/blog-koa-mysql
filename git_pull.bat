@@ -1,4 +1,4 @@
 @echo off
 echo "========»ñµÃºó¶Ë=========="
-git pull git@github.com:Yzwcp/blog-koa-mysql.git
+git pull git@github.com:Yzwcp/blog-koa-mysql.git master
 pause
