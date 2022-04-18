@@ -1,6 +1,5 @@
 const {sequelize} = require("../../connect/mysql.js");
 const { Model, DataTypes,Sequelize ,Deferrable} = require("sequelize");
-const {Bulk} = require('../bulk/static')
 
 class Order extends Model {}
 

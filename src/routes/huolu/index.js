@@ -31,7 +31,7 @@ const postDetail = {
   page_size:20, 
   doc:1
 }
-HuoL.prefix('/wx/huolu')
+HuoL.prefix('/wx/hulu')
 HuoL.post('/category', async (ctx) => {
   const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/category/list/ANDROID/2.0',params:{...fiexdParams,is_hidden:1}})
   if(HuoLResult.statusCode===200){
@@ -57,8 +57,10 @@ HuoL.get('/posts', async (ctx) => {
   }
 });
 HuoL.get('/post/detail', async (ctx) => {
-  const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/detail/ANDROID/4.1.7',qs:{...postDetail,...fiexdParams}
+  const params = ctx.query
+  const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/detail/ANDROID/4.1.7',qs:{...postDetail,...fiexdParams,...params}
   })
+
   if(HuoLResult.statusCode===200){
     const result = JSON.parse(JSON.parse(JSON.stringify(HuoLResult.body)))
     ctx.body= formatResult(result,true)
