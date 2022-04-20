@@ -27,25 +27,25 @@
 // }
 const { Sequelize,Op } = require('sequelize');
 
-// const sequelize = new Sequelize('wx', 'wx', 'j6KwiJmFLfdrGa4Z', {
-//     host: '139.196.155.67',
-//     dialect:'mysql', /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
-//     timezone: '+08:00',
-//     dialectOptions: {
-//       dateStrings: true,
-//       typeCast: true
-//     },
-// });
-
-const sequelize = new Sequelize('wx', 'root', 'root', {
-  host: 'localhost',
-  dialect:'mysql', /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
-  timezone: '+08:00',
-  dialectOptions: {
-    dateStrings: true,
-    typeCast: true
-  },
+const sequelize = new Sequelize('wx', 'wx', '337699', {
+    host: '139.196.155.67',
+    dialect:'mysql', /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
+    timezone: '+08:00',
+    dialectOptions: {
+      dateStrings: true,
+      typeCast: true
+    },
 });
+
+// const sequelize = new Sequelize('wx', 'root', 'root', {
+//   host: 'localhost',
+//   dialect:'mysql', /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
+//   timezone: '+08:00',
+//   dialectOptions: {
+//     dateStrings: true,
+//     typeCast: true
+//   },
+// });
 // 模型同步mysql
 // (async () => {
 //   await sequelize.sync({alter:true});

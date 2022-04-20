@@ -20,8 +20,24 @@ const p = (url,form)=>{
 		})
 	})
 }
-
+async function delay(time) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function(){
+    let a = {
+        "msg": "sucess",
+        "code": "1",
+        "data":0
+    }
+      resolve(a);
+    }, time);
+  });
+};
 thirdparty.post('/proxy', async (ctx) => {
+
+//   const a = await delay(2000)
+//   ctx.body=JSON.stringify(a)
+
+// return
 	let body = ctx.request.body
 	// console.log(ctx.query.url);
 	const url =baseUrl+ctx.query.url +token
@@ -33,20 +49,22 @@ thirdparty.post('/proxy', async (ctx) => {
   if(body.hasOwnProperty('phoneno')){
     body['phoneno'] =  17395715159
   }
+  if(body.hasOwnProperty('begintime')){
+    body['begintime'] =  '2022/4/19'
+  }
 	// console.log(url);
 	// console.log(body);
 	try{
 		let result = await p(url,body)
-		// console.log(result);
+		console.log(result);
 		let a =JSON.parse(result)
-		console.log(a);
 		ctx.body=JSON.stringify(result)
-		fs.writeFile('user.json', result, (err) => {
-		    if (err) {
-		        throw err;
-		    }
-		    console.log("JSON data is saved.");
-		});
+		// fs.writeFile('user.json', result, (err) => {
+		//     if (err) {
+		//         throw err;
+		//     }
+		//     console.log("JSON data is saved.");
+		// });
 	}catch(err){ctx.body=JSON.stringify(err)}
 }); 
 

@@ -7,7 +7,7 @@ const {verifyToken} =require('./src/authentication/token.js')
 const router =  require('./src/index.js')
 const cors = require('@koa/cors')
 const bodyParser = require('koa-bodyparser')
-const wihteList = ['login','bulk','detail','register','common','thirdparty','proxy','huolu']
+const wihteList = ['login','bulk','detail','register','common','thirdparty','proxy','hulu','wechatapplettrain']
 
 app.use(cors())
 // logger
