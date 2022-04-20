@@ -12,7 +12,7 @@ const fiexdParams = {
   app_version : '4.1.0.8',
   versioncode : '20141459',
   market_id : 'floor_xiaomi',
-  _key : 'A2D6FB7490171C28C11DA24A3DF8CD6BB26BC92CDB7505D5BF85F72053F64CE040A626C094BBA74549207D57787E4BE266FB830A4F3ECB2A',
+  _key : 'A91C774919A75441BA88F001C990C0BC1D4F0972542810803F733F7B729CA135609F49D5BE031554C74F5ACE4922CFB199B60F40AF8A73F6',
   device_code : '%5Bd%5Dcd4ec618-1646-4b76-894c-6b1ae580feb0',
   phone_brand_type : 'VO',
 }
@@ -31,6 +31,12 @@ const postDetail = {
   page_size:20, 
   doc:1
 }
+const searchParams = {
+  start:0,
+  count:5,
+  cat_id:43,
+  
+}
 HuoL.prefix('/wx/hulu')
 HuoL.post('/category', async (ctx) => {
   const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/category/list/ANDROID/2.0',params:{...fiexdParams,is_hidden:1}})
@@ -45,9 +51,22 @@ HuoL.post('/category', async (ctx) => {
 }); 
 HuoL.get('/posts', async (ctx) => {
   const params = ctx.query
-  params.start =new Date().getTime()
+  params.start =0
   console.log(params);
   const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/list/ANDROID/2.0',qs:{...postsListParams,...fiexdParams,...params}
+  })
+  if(HuoLResult.statusCode===200){
+    const result = JSON.parse(JSON.parse(JSON.stringify(HuoLResult.body)))
+    ctx.body= formatResult(result,true)
+  }else{
+    ctx.body=formatResult(result,false)
+  }
+});
+HuoL.get('/posts/search', async (ctx) => {
+  const params = ctx.query
+  params.start =new Date().getTime()
+  console.log({...searchParams,...fiexdParams,...params});
+  const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/search/ANDROID/2.1',qs:{...searchParams,...fiexdParams,...params}
   })
   if(HuoLResult.statusCode===200){
     const result = JSON.parse(JSON.parse(JSON.stringify(HuoLResult.body)))
