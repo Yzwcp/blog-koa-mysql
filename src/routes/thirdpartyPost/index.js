@@ -49,9 +49,9 @@ thirdparty.post('/proxy', async (ctx) => {
   if(body.hasOwnProperty('phoneno')){
     body['phoneno'] =  17395715159
   }
-  if(body.hasOwnProperty('begintime')){
-    body['begintime'] =  '2022/4/19'
-  }
+  // if(body.hasOwnProperty('begintime')){
+  //   body['begintime'] =  '2022/4/19'
+  // }
 	// console.log(url);
 	// console.log(body);
 	try{
