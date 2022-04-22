@@ -4,10 +4,15 @@ const {util} = require('../../util/util.js')
 const koa2Req = require('koa2-request')
 var request = require('request');
 const qs = require('qs')
+const fs = require('fs')
 const baseUrl  ='http://39.104.62.121:8080/skillcenterwx'
 const token = "?token=1729873020190720200"
-const fs =require('fs')
-
+const multer  = require("@koa/multer");
+const co = require("co");
+const axios = require('axios');
+const FormData =require('form-data')
+const path = require('path')
+const koaBody = require('koa-body');
 // thirdparty.prefix('/rest/wechatapplettrain')
 const p = (url,form)=>{
 	return new Promise((resolve,rejeck)=>{
@@ -32,32 +37,63 @@ async function delay(time) {
     }, time);
   });
 };
-thirdparty.post('/proxy', async (ctx) => {
 
-//   const a = await delay(2000)
+
+
+thirdparty.post('/proxy',async (ctx,next) => {
+	
 //   ctx.body=JSON.stringify(a)
-
-// return
 	let body = ctx.request.body
-	// console.log(ctx.query.url);
 	const url =baseUrl+ctx.query.url +token
+	if(ctx.query.img==1){
+		await koaBody({
+		  multipart:true, // 支持文件上传
+		  encoding:'gzip',
+		  formidable:{
+		    uploadDir:('./public/jiuhua/'), // 设置文件上传目录
+		    keepExtensions: true,    // 保持文件的后缀
+		    maxFieldsSize:2 * 1024 * 1024, // 文件上传大小
+		    onFileBegin:(name,file) => { // 文件上传前的设置
+		      // console.log(`name: ${name}`);
+		      // console.log(file);
+		    },
+		  }
+		})(ctx,next)
+		// console.log(a);
+		const localFile =fs.createReadStream('./public/jiuhua/'+ctx.request.files.file.newFilename)
+		console.log('./public/jiuhua/'+ctx.request.files.file.newFilename);
+		const r = {aa:123,bb:44}
+		let formData = new FormData()
+		formData.append('file', localFile);
+		formData.append('data', JSON.stringify(r));
+		try{
+			let result = await p(url,formData)
+			ctx.body=JSON.stringify(result)
+			// fs.writeFile('user.json', result, (err) => {
+			//     if (err) {
+			//         throw err;
+			//     }
+			//     console.log("JSON data is saved.");
+			// });
+		}catch(err){ctx.body=JSON.stringify(err)}
+		return
+	}
+	// console.log(ctx.query.url);
 	//删除代理标记url
 	//测试死数据
 	if(body.hasOwnProperty('personid')){
-    body['personid'] = 128587
-  }
-  if(body.hasOwnProperty('phoneno')){
-    body['phoneno'] =  17395715159
-  }
+		body['personid'] = 128587
+	}
+	if(body.hasOwnProperty('phoneno')){
+		body['phoneno'] =  17395715159
+	}
   // if(body.hasOwnProperty('begintime')){
   //   body['begintime'] =  '2022/4/19'
   // }
-	// console.log(url);
-	// console.log(body);
+  
 	try{
-		let result = await p(url,body)
-		console.log(result);
-		let a =JSON.parse(result)
+		// let result = await p(url,body)
+		const result = await delay(500)
 		ctx.body=JSON.stringify(result)
 		// fs.writeFile('user.json', result, (err) => {
 		//     if (err) {
