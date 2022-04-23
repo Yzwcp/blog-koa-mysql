@@ -1,8 +1,7 @@
 const {sequelize} = require("../../connect/mysql.js");
 const { Model, DataTypes,Sequelize } = require("sequelize");
-class User extends Model {}
-const times = new Date().getTime()
-User.init({
+class SignIn extends Model {}
+SignIn.init({
   // 在这里定义模型属性
   id: {
     type: DataTypes.INTEGER, autoIncrement: true,primaryKey:true
@@ -12,38 +11,22 @@ User.init({
   //   type: DataTypes.UUID,
   //   defaultValue: Sequelize.UUIDV4 // 或 Sequelize.UUIDV1
   // },
-  auth: {
+  uid:{
     type: DataTypes.STRING,
-    // allowNull 默认为 true
+    allowNull:false
+
   },
-  email:{
+  signdate:{
+    type: DataTypes.BIGINT,
+    allowNull:false
+  },
+  source:{
     type: DataTypes.STRING,
-    // allowNull 默认为 true
+    allowNull:false
+
   },
-  openid:{
-    type: DataTypes.STRING,
-    // allowNull 默认为 true
-  },
-  userInfo:{
-    type: DataTypes.STRING,
-    // allowNull 默认为 true
-  },
-  unionid:{
-    type: DataTypes.STRING,
-    // allowNull 默认为 true
-  },
-  isHelp:{
-    type: DataTypes.BOOLEAN,
-  },
-  phone:{
-    type: DataTypes.STRING,
-  },
-  integral:{
+  score:{
     type: DataTypes.INTEGER,
-    defaultValue:0,
-  },
-  password:{
-    type: DataTypes.STRING,
   },
   createdAt:{
     type: DataTypes.DATE
@@ -55,6 +38,7 @@ User.init({
   // 这是其他模型参数
   timestamps: true,
   sequelize, // 我们需要传递连接实例
-  modelName: 'user' // 我们需要选择模型名称
+  modelName: 'sign_in' // 我们需要选择模型名称
 });
-module.exports.User = User
+
+module.exports.SignIn = SignIn

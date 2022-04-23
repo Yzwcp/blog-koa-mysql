@@ -12,6 +12,7 @@ const bulkRouter = require('./routes/bulk')
 const orderRouter = require('./routes/order')
 const groupAddRouter = require('./routes/groupAdd')
 const HuoL = require('./routes/huolu')
+const signIn = require('./routes/signin')
 
 router.use(articleRouter)
 .use(classifyRouter)
@@ -24,6 +25,7 @@ router.use(articleRouter)
 .use(orderRouter)
 .use(HuoL)
 .use(groupAddRouter)
+.use(signIn)
 module.exports = router
 
 
