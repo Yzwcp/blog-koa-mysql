@@ -38,6 +38,10 @@ User.init({
   phone:{
     type: DataTypes.STRING,
   },
+  signcount:{
+    type: DataTypes.INTEGER,
+    defaultValue:0
+  },
   integral:{
     type: DataTypes.INTEGER,
     defaultValue:0,

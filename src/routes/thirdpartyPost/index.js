@@ -92,8 +92,8 @@ thirdparty.post('/proxy',async (ctx,next) => {
   // }
   
 	try{
-		// let result = await p(url,body)
-		const result = await delay(500)
+		let result = await p(url,body)
+		// const result = await delay(500)
 		ctx.body=JSON.stringify(result)
 		// fs.writeFile('user.json', result, (err) => {
 		//     if (err) {
