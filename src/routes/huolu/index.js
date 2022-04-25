@@ -52,14 +52,13 @@ HuoL.post('/category', async (ctx) => {
 HuoL.get('/posts', async (ctx) => {
   const params = ctx.query
   params.start =0
-  console.log(params);
-  const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/list/ANDROID/2.0',qs:{...postsListParams,...fiexdParams,...params}
+  const HuoLResult =await koa2Req({url:'http://floor.huluxia.com/post/list/ANDROID/2.1',qs:{...postsListParams,...fiexdParams,...params}
   })
   if(HuoLResult.statusCode===200){
     const result = JSON.parse(JSON.parse(JSON.stringify(HuoLResult.body)))
     ctx.body= formatResult(result,true)
   }else{
-    ctx.body=formatResult(result,false)
+    ctx.body=formatResult(HuoLResult,false)
   }
 });
 HuoL.get('/posts/search', async (ctx) => {

@@ -17,6 +17,13 @@ const Tips = {
 module.exports = {
   Tips,
   client,
+  sleep:(delay)=>{
+    return  new Promise((resolve,reject)=>{
+      setTimeout(()=>{
+        resolve()
+      },delay)
+    })
+  },
   /**
    * 格式化输出数据
    * @param data

@@ -66,20 +66,5 @@ userRouter.post('/wx/login', async (ctx) => {
   }
 });
 
-userRouter.post('/wx/user/integral', async (ctx) => {
-  try {
-    //去微信拿openid
-    const user =  ctx.state.user
-    const result = await User.findOne({where:{id:user.id}})
-    ctx.body=formatResult({integral:result.integral},true)
-    // return
-    // const result = await User.findOne({where:{email}})
-    // if(!result) throw('邮箱不存在')
-    // if(result.password !== encrypt(password))throw('密码错误')
-    // const token =await setToken({id:result.id,auth:result.auth,email:result.email},)
-    // ctx.body=formatResult(result,true,token)
-  }catch (e) {
-    ctx.body = formatResult(e,false,Tips.HANDLE_ERR)
-  }
-});
+
 module.exports = userRouter.routes()
