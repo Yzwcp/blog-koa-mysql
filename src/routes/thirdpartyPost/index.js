@@ -25,6 +25,7 @@ const p = (url,form)=>{
 		})
 	})
 }
+console.log('1234'.substring(0,3));
 async function delay(time) {
   return new Promise(function(resolve, reject) {
     setTimeout(function(){
@@ -61,13 +62,14 @@ thirdparty.post('/proxy',async (ctx,next) => {
 		})(ctx,next)
 		// console.log(a);
 		const localFile =fs.createReadStream('./public/jiuhua/'+ctx.request.files.file.newFilename)
-		console.log('./public/jiuhua/'+ctx.request.files.file.newFilename);
-		const r = {aa:123,bb:44}
+		// console.log('./public/jiuhua/'+ctx.request.files.file.newFilename);
+		const r = {"personid":"128587","trainid":"29300","personname":"袁志文","taskid":"161720","token":"1731160516329478200"}
 		let formData = new FormData()
 		formData.append('file', localFile);
 		formData.append('data', JSON.stringify(r));
 		try{
 			let result = await p(url,formData)
+      console.log(result);
 			ctx.body=JSON.stringify(result)
 			// fs.writeFile('user.json', result, (err) => {
 			//     if (err) {
@@ -75,22 +77,35 @@ thirdparty.post('/proxy',async (ctx,next) => {
 			//     }
 			//     console.log("JSON data is saved.");
 			// });
-		}catch(err){ctx.body=JSON.stringify(err)}
+		}catch(err){
+      console.log(err);
+      ctx.body=JSON.stringify(err)
+    }
 		return
 	}
 	// console.log(ctx.query.url);
 	//删除代理标记url
 	//测试死数据
 	if(body.hasOwnProperty('personid')){
-		body['personid'] = 128587
+		// body['personid'] = 128587
+    body['personid'] = 111447
 	}
 	if(body.hasOwnProperty('phoneno')){
 		body['phoneno'] =  17395715159
 	}
+  if(body.hasOwnProperty('trainid')){
+		body['trainid'] =  25212
+	}
   // if(body.hasOwnProperty('begintime')){
   //   body['begintime'] =  '2022/4/19'
   // }
-  
+  // console.log(ctx.query.url.indexOf('appointmenttrain'));
+  // if(ctx.query.url.indexOf('appointmenttrain')>-1){
+  //   let a = await delay(1000)
+	// 	ctx.body=JSON.stringify(a)
+
+  //   return
+  // }
 	try{
 		let result = await p(url,body)
 		// const result = await delay(500)
