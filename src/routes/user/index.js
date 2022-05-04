@@ -53,7 +53,7 @@ userRouter.post('/wx/login', async (ctx) => {
         defaults:{ userInfo,auth:'wx'}
       });
       const token =await setToken({id:result.id,auth:result.auth,openid:result.openid},'3600d')
-      ctx.body=formatResult({result:result.userInfo,token},true)
+      ctx.body=formatResult({result,token},true)
     }
     // return
     // const result = await User.findOne({where:{email}})
@@ -65,6 +65,27 @@ userRouter.post('/wx/login', async (ctx) => {
     ctx.body = formatResult(e,false,Tips.HANDLE_ERR)
   }
 });
+
+
+userRouter.post('/wx/user/modify', async (ctx) => {
+  try {
+    const user = ctx.state.user
+    const {address=''} = ctx.request.body
+    let result = await User.update({
+      address:address
+    },{
+      where:{
+        id:user.id
+      }
+    })
+    console.log(result);
+    if(result.includes(1))return  ctx.body = formatResult(result,true,Tips.HANDLE_SUCCESS);
+  }catch (e) {
+    ctx.body = formatResult(e,false,Tips.HANDLE_ERR)
+  }
+});
+
+
 
 
 module.exports = userRouter.routes()

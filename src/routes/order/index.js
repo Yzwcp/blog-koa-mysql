@@ -20,6 +20,15 @@ orderRouter.prefix('/wx/order')
  * @apiGroup Order
  * @apiVersion 1.0.0
  */
+//  status:{
+//   "-1":"结束了" ,
+//   "0":"初始化",
+//   '1':"正在进行中" ,
+//   "-2":"活动异常" ,
+//   "2":"完成拼团",
+//   "99":'全部'
+
+// },
 orderRouter.get('/query', async (ctx) => {
   try {
     const {title,categorize,tags,pageSize=10,current=1,status=1} = ctx.request.query
@@ -33,13 +42,14 @@ orderRouter.get('/query', async (ctx) => {
     }
     const nowTimeStamp = Number(new Date().getTime() )
     
+    if(status!=99){
+      conditions.status=status
+    }
     if(status==1){
       conditions.endtime={
         [Op.gt]:nowTimeStamp,
       }
-
     }
-    console.log(conditions);
     
   Order.belongsTo(Bulk, { foreignKey: 'bulk_id', targetKey: 'id' });
     //没有条件传进来 删除查询条件
@@ -55,6 +65,7 @@ orderRouter.get('/query', async (ctx) => {
       order:[['id','DESC']],
       
     })
+    
     ctx.body = formatResult(result,true)
   }catch (e) {
     console.log(e);
@@ -165,7 +176,9 @@ orderRouter.post('/detail', async (ctx) => {
     }]})
     // const groupAddresult = await GroupAdd.findOne({ include:[Order]})
     // const bulkresult = await Bulk.findOne({ where:{id:orderesult.bulk_id}})
-
+    if(orderesult.bulk.groupsize==orderesult.group_adds.length){
+      orderesult.update({ status:2 })
+    }
     ctx.body = formatResult(orderesult,true,Tips.HANDLE_SUCCESS);
   }catch (e) {
     ctx.body = formatResult({},false,e);

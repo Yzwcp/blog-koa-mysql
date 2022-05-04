@@ -33,7 +33,7 @@ Order.init({
   },
   status:{
     type: DataTypes.INTEGER,
-    defaultValue:0
+    defaultValue:1
   },
   bulk_id: {
     type: DataTypes.STRING,

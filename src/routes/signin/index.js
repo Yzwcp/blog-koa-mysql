@@ -73,10 +73,9 @@ SignInRouter.post('/save', async (ctx) => {
       if(signTimeMax && ( NowTimeStamp-signTimeMax == 86400000)) {
         await userResult.increment('signcount'); //连续签到自增1
       }else{
-        await userResult.update({ signcount:0 })//断签设置为0
+        await userResult.update({ signcount:1 })//断签设置为1
         score = 1 //积分设为一
       }
-
       const incrementUserResult = await userResult.increment('integral', { by:  score}); //加上积分
       await incrementUserResult.reload()
       if(incrementUserResult){

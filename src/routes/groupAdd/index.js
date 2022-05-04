@@ -43,6 +43,7 @@ groupAddRouter.get('/query', async (ctx) => {
       limit: Number(pageSize),
       order:[['id','DESC']]
     })
+
     ctx.body = formatResult(result,true)
   }catch (e) {
     ctx.body = formatResult(e,false,Tips.QUERY_ERROR)
@@ -75,6 +76,7 @@ groupAddRouter.post('/save', async (ctx) => {
       where:{
         id:order_id,
         endtime:{[Op.lte]:nowTimeStamp,},
+
       }
     })
     if(orderdetail) throw '订单已经过期'  

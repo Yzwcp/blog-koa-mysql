@@ -46,6 +46,9 @@ User.init({
     type: DataTypes.INTEGER,
     defaultValue:0,
   },
+  address:{
+    type: DataTypes.STRING,
+  },
   password:{
     type: DataTypes.STRING,
   },
